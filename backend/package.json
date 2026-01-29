@@ -1,0 +1,16 @@
+{
+  "name": "resend-poc-deno",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "deno task dev",
+    "start": "deno task start",
+    "fmt": "deno task fmt",
+    "lint": "deno task lint"
+  },
+  "dependencies": {
+    "hono": "4.11.4",
+    "resend": "^6.9.0"
+  }
+}
