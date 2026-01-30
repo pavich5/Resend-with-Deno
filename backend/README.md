@@ -7,6 +7,7 @@ emails with Resend.
 
 ```bash
 export RESEND_API_KEY=api_key
+```
 
 ## Run
 
@@ -35,7 +36,8 @@ Send or schedule an email.
 Body:
 - `to` (string)
 - `subject` (string)
-- `html` (string)
+- `template_id` (string)
+- `variables` (object, optional)
 - `from` (string, required, valid email)
 - `scheduledAt` (string, optional: ISO 8601 or relative like `in 10 sec`)
 
@@ -43,7 +45,7 @@ Example:
 ```bash
 curl -X POST http://localhost:8000/api/emails/send \
   -H "Content-Type: application/json" \
-  -d '{"to":"antonio.pavikj@ludotech.co","subject":"Hello","html":"<strong>It works</strong>","from":"onboarding@resend.dev","scheduledAt":"in 50 sec"}'
+  -d '{"to":"antonio.pavikj@ludotech.co","subject":"Hello","template_id":"your-template-id","variables":{"PRODUCT":"Laptop"},"from":"onboarding@resend.dev","scheduledAt":"in 50 sec"}'
 ```
 
 ### GET /emails/:id

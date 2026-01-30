@@ -10,7 +10,7 @@ Deno.test("validateSendEmailRequest returns no errors for valid input", () => {
   const result = validateSendEmailRequest({
     to: "recipient@example.com",
     subject: "Hello",
-    html: "<strong>Hi</strong>",
+    template_id: "template-123",
     from: "onboarding@resend.dev",
   });
 
@@ -21,7 +21,7 @@ Deno.test("validateSendEmailRequest returns errors for invalid fields", () => {
   const result = validateSendEmailRequest({
     to: "",
     subject: " ",
-    html: "",
+    template_id: "",
     from: "",
   });
 
@@ -33,7 +33,7 @@ Deno.test("validateSendEmailRequest returns errors for invalid fields", () => {
   assertEquals(result.errors, [
     "Invalid or missing 'to'",
     "Invalid or missing 'subject'",
-    "Invalid or missing 'html'",
+    "Invalid or missing 'template_id'",
     "Invalid or missing 'from'",
   ]);
 });
@@ -42,7 +42,7 @@ Deno.test("validateSendEmailRequest rejects invalid from email", () => {
   const result = validateSendEmailRequest({
     to: "recipient@example.com",
     subject: "Hello",
-    html: "<strong>Hi</strong>",
+    template_id: "template-123",
     from: "not-an-email",
     scheduledAt: "in 1 min",
   });
@@ -59,7 +59,7 @@ Deno.test("validateSendEmailRequest rejects invalid scheduledAt", () => {
   const result = validateSendEmailRequest({
     to: "recipient@example.com",
     subject: "Hello",
-    html: "<strong>Hi</strong>",
+    template_id: "template-123",
     from: "onboarding@resend.dev",
     scheduledAt: "   ",
   });

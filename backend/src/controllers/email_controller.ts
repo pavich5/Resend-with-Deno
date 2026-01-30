@@ -5,10 +5,10 @@ import {
   retrieveEmail,
   rescheduleEmail,
   sendEmail,
-  type SendEmailRequestBody,
 } from "../services/email_service.ts";
 import { parseJsonBody } from "../utils/request.ts";
 import {
+  type SendEmailRequestPayload,
   validateEmailId,
   validateListEmailsQuery,
   validateRescheduleEmailRequest,
@@ -16,19 +16,18 @@ import {
 } from "../utils/validation.ts";
 
 export async function sendEmailHandler(context: Context) {
-  const parsedBody = await parseJsonBody<SendEmailRequestBody>(context);
+  const parsedBody = await parseJsonBody<SendEmailRequestPayload>(context);
   if (!parsedBody.ok) {
     return context.json({ error: parsedBody.error }, 400);
   }
 
-  const payload = parsedBody.value;
-  const validationResult = validateSendEmailRequest(payload);
+  const validationResult = validateSendEmailRequest(parsedBody.value);
 
   if (!validationResult.ok) {
     return context.json({ errors: validationResult.errors }, 400);
   }
 
-  const sendResult = await sendEmail(payload);
+  const sendResult = await sendEmail(validationResult.value);
 
   if (!sendResult.ok) {
     return context.json({ error: sendResult.error }, 502);

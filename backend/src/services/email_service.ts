@@ -5,7 +5,8 @@ export type SendEmailRequestBody = {
   from: string;
   to: string;
   subject: string;
-  html: string;
+  templateId: string;
+  variables?: Record<string, string | number>;
   scheduledAt?: string;
 };
 
@@ -56,7 +57,14 @@ export async function sendEmail(
   payload: SendEmailRequestBody,
 ): Promise<SendEmailResult> {
   try {
-    const { data, error } = await resend.emails.send(payload);
+    const { templateId, variables, ...rest } = payload;
+    const template = variables
+      ? { id: templateId, variables }
+      : { id: templateId };
+    const { data, error } = await resend.emails.send({
+      ...rest,
+      template,
+    });
 
     if (error) {
       return { ok: false, error: error.message ?? "Resend error" };

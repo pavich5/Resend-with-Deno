@@ -4,7 +4,8 @@ export type SendEmailPayload = {
   from: string
   to: string
   subject: string
-  html: string
+  template_id: string
+  variables?: Record<string, string | number>
   scheduledAt?: string
 }
 
