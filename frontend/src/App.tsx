@@ -39,8 +39,7 @@ function App() {
   const [sendFrom, setSendFrom] = useState('onboarding@resend.dev')
   const [sendTo, setSendTo] = useState('antonio.pavikj@ludotech.co')
   const [sendSubject, setSendSubject] = useState('Hello from Resend')
-  const [sendTemplateId, setSendTemplateId] = useState('your-template-id')
-  const [sendVariables, setSendVariables] = useState('{"PRODUCT":"Laptop"}')
+  const [sendHtml, setSendHtml] = useState('<strong>It works</strong>')
   const [sendScheduledAt, setSendScheduledAt] = useState('')
   const [sendResult, setSendResult] = useState<ApiResponse | null>(null)
   const [sendLoading, setSendLoading] = useState(false)
@@ -87,44 +86,12 @@ function App() {
       setSendResult(emptyResponse('Add a server URL first.'))
       return
     }
-    const templateId = sendTemplateId.trim()
-    if (!templateId) {
-      setSendResult(emptyResponse('Template ID is required.'))
-      return
-    }
-    const variablesInput = sendVariables.trim()
-    let variables: Record<string, string | number> | undefined
-    if (variablesInput.length > 0) {
-      try {
-        const parsed = JSON.parse(variablesInput)
-        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-          setSendResult(emptyResponse('Variables must be a JSON object.'))
-          return
-        }
-        for (const value of Object.values(parsed)) {
-          const valueType = typeof value
-          if (valueType !== 'string' && valueType !== 'number') {
-            setSendResult(
-              emptyResponse('Variables values must be strings or numbers.'),
-            )
-            return
-          }
-        }
-        variables = parsed as Record<string, string | number>
-      } catch {
-        setSendResult(emptyResponse('Variables must be valid JSON.'))
-        return
-      }
-    }
     setSendLoading(true)
     const payload: SendEmailPayload = {
       from: sendFrom,
       to: sendTo,
       subject: sendSubject,
-      template_id: templateId,
-    }
-    if (variables) {
-      payload.variables = variables
+      html: sendHtml,
     }
     if (sendScheduledAt.trim().length > 0) {
       payload.scheduledAt = sendScheduledAt.trim()
@@ -204,14 +171,12 @@ function App() {
           from={sendFrom}
           to={sendTo}
           subject={sendSubject}
-          templateId={sendTemplateId}
-          variables={sendVariables}
+          html={sendHtml}
           scheduledAt={sendScheduledAt}
           onFromChange={setSendFrom}
           onToChange={setSendTo}
           onSubjectChange={setSendSubject}
-          onTemplateIdChange={setSendTemplateId}
-          onVariablesChange={setSendVariables}
+          onHtmlChange={setSendHtml}
           onScheduledAtChange={setSendScheduledAt}
           onSubmit={handleSend}
           loading={sendLoading}

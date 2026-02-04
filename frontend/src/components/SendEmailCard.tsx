@@ -7,14 +7,12 @@ type SendEmailCardProps = {
   from: string
   to: string
   subject: string
-  templateId: string
-  variables: string
+  html: string
   scheduledAt: string
   onFromChange: (value: string) => void
   onToChange: (value: string) => void
   onSubjectChange: (value: string) => void
-  onTemplateIdChange: (value: string) => void
-  onVariablesChange: (value: string) => void
+  onHtmlChange: (value: string) => void
   onScheduledAtChange: (value: string) => void
   onSubmit: () => void
   loading: boolean
@@ -25,14 +23,12 @@ function SendEmailCard({
   from,
   to,
   subject,
-  templateId,
-  variables,
+  html,
   scheduledAt,
   onFromChange,
   onToChange,
   onSubjectChange,
-  onTemplateIdChange,
-  onVariablesChange,
+  onHtmlChange,
   onScheduledAtChange,
   onSubmit,
   loading,
@@ -68,20 +64,11 @@ function SendEmailCard({
             onChange={(event) => onSubjectChange(event.target.value)}
           />
         </Field>
-        <Field label='Template ID' full>
-          <input
-            type='text'
-            value={templateId}
-            onChange={(event) => onTemplateIdChange(event.target.value)}
-            placeholder='your-template-id'
-          />
-        </Field>
-        <Field label='Variables (JSON, optional)' full>
+        <Field label='HTML' full>
           <textarea
             rows={3}
-            value={variables}
-            onChange={(event) => onVariablesChange(event.target.value)}
-            placeholder='{"PRODUCT":"Laptop"}'
+            value={html}
+            onChange={(event) => onHtmlChange(event.target.value)}
           />
         </Field>
         <Field label='Scheduled At (optional)' full>

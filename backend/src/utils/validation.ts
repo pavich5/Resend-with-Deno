@@ -4,9 +4,7 @@ import {
   SendEmailRequestBody,
 } from "../services/email_service.ts";
 
-type SendEmailValidationResult =
-  | { ok: true; value: SendEmailRequestBody }
-  | { ok: false; errors: string[] };
+type SendEmailValidationResult = { ok: true } | { ok: false; errors: string[] };
 
 type IdValidationResult = { ok: true } | { ok: false; errors: string[] };
 
@@ -33,14 +31,13 @@ const sendEmailSchema = z.object({
     })
     .trim()
     .min(1, "Invalid or missing 'subject'"),
-  template_id: z
+  html: z
     .string({
-      required_error: "Invalid or missing 'template_id'",
-      invalid_type_error: "Invalid or missing 'template_id'",
+      required_error: "Invalid or missing 'html'",
+      invalid_type_error: "Invalid or missing 'html'",
     })
     .trim()
-    .min(1, "Invalid or missing 'template_id'"),
-  variables: z.record(z.union([z.string(), z.number()])).optional(),
+    .min(1, "Invalid or missing 'html'"),
   scheduledAt: z
     .string({
       invalid_type_error: "Invalid 'scheduledAt'",
@@ -57,8 +54,6 @@ const sendEmailSchema = z.object({
     .min(1, "Invalid or missing 'from'")
     .email("Invalid or missing 'from'"),
 });
-
-type SendEmailRequestPayload = z.infer<typeof sendEmailSchema>;
 
 const rescheduleEmailSchema = z.object({
   scheduledAt: z
@@ -133,12 +128,11 @@ const emailIdSchema = z
   .min(1, "Invalid or missing 'id'");
 
 const validateSendEmailRequest = (
-  payload: SendEmailRequestPayload,
+  payload: SendEmailRequestBody,
 ): SendEmailValidationResult => {
   const result = sendEmailSchema.safeParse(payload);
   if (result.success) {
-    const { template_id, ...rest } = result.data;
-    return { ok: true, value: { ...rest, templateId: template_id } };
+    return { ok: true };
   }
 
   const errors = Array.from(
@@ -211,7 +205,6 @@ const validateListEmailsQuery = (
 };
 
 export {
-  type SendEmailRequestPayload,
   validateEmailId,
   validateListEmailsQuery,
   validateRescheduleEmailRequest,
